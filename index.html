@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BNN Network | Movies & Anime</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0b12;
+            color: white;
+        }
+
+        /* HEADER */
+        header {
+            background: #151521;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 2px solid #8b5cf6;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #a78bfa;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #a78bfa;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            padding: 65px 6%;
+            text-align: center;
+            background:
+                radial-gradient(circle at top, #38205c, #0b0b12 70%);
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 6vw, 50px);
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: #a78bfa;
+        }
+
+        .hero p {
+            color: #c4c4d4;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #45455c;
+            background: #171724;
+            color: white;
+            outline: none;
+        }
+
+        .search-box button {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #8b5cf6;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* MOVIE SECTION */
+        .section {
+            padding: 35px 6%;
+        }
+
+        .section h2 {
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+
+        .section h2 span {
+            color: #a78bfa;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(145px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: #171724;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid #28283a;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .poster {
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+            background: linear-gradient(
+                135deg, #5b21b6, #111827
+            );
+        }
+
+        .poster.anime {
+            background: linear-gradient(
+                135deg, #be185d, #312e81
+            );
+        }
+
+        .poster.series {
+            background: linear-gradient(
+                135deg, #0f766e, #172554
+            );
+        }
+
+        .movie-info {
+            padding: 14px;
+        }
+
+        .movie-info h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .movie-info p {
+            color: #b7b7c9;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .watch-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #8b5cf6;
+            color: white;
+            cursor: pointer;
+        }
+
+        .watch-btn:hover {
+            background: #6d28d9;
+        }
+
+        .no-results {
+            display: none;
+            color: #c4c4d4;
+            text-align: center;
+            padding: 25px 0;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 40px;
+            padding: 30px 15px;
+            text-align: center;
+            background: #151521;
+            color: #aaaabd;
+            line-height: 2;
+        }
+
+        footer strong {
+            color: #a78bfa;
+        }
+
+        /* MOBILE */
+        @media (max-width: 480px) {
+            header {
+                justify-content: center;
+                text-align: center;
+            }
+
+            nav a {
+                margin: 0 6px;
+            }
+
+            .hero {
+                padding: 45px 5%;
+            }
+
+            .section {
+                padding: 25px 5%;
+            }
+
+            .movie-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .poster {
+                height: 170px;
+            }
+
+            .movie-info {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">🔥 BNN NETWORK</div>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#movies">Movies</a>
+            <a href="#anime">Anime</a>
+            <a href="#series">TV Series</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <h1>Welcome to <span>BNN Network</span></h1>
+
+        <p>
+            🎬 Explore Movies, Anime & TV Series<br>
+            Your Entertainment Starts Here!
+        </p>
+
+        <div class="search-box">
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Search Movies, Anime..."
+                aria-label="Search entertainment"
+            >
+
+            <button id="searchBtn">🔍 Search</button>
+        </div>
+    </section>
+
+    <!-- MOVIES -->
+    <section class="section" id="movies">
+        <h2>🎬 Popular <span>Movies</span></h2>
+
+        <div class="movie-grid">
+
+            <article class="movie-card" data-category="movie">
+                <div class="poster">🎬</div>
+
+                <div class="movie-info">
+                    <h3>Action Movie</h3>
+                    <p>Movie • Action</p>
+
+                    <button
+                        class="watch-btn"
+                        data-title="Action Movie"
+                    >
+                        ▶ View Details
+                    </button>
+                </div>
+            </article>
+
+            <article class="movie-card" data-category="movie">
+                <div class="poster">
+                    🚀
+                </div>
+
+                <div class="movie-info">
+                    <h3>Space Adventure</h3>
+                    <p>Movie • Adventure</p>
+
+                    <button
+                        class="watch-btn"
+                        data-title="Space Adventure"
+                    >
+                        ▶ View Details
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ANIME -->
+    <section class="section" id="anime">
+        <h2>⚡ Popular <span>Anime</span></h2>
+
+        <div class="movie-grid">
+
+            <article class="movie-card" data-category="anime">
+                <div class="poster anime">⚔️</div>
+
+                <div class="movie-info">
+                    <h3>Anime Adventure</h3>
+                    <p>Anime • Adventure</p>
+
+                    <button
+                        class="watch-btn"
+                        data-title="Anime Adventure"
+                    >
+                        ▶ View Details
+                    </button>
+                </div>
+            </article>
+
+            <article class="movie-card" data-category="anime">
+                <div class="poster anime">🐉</div>
+
+                <div class="movie-info">
+                    <h3>Dragon World</h3>
+                    <p>Anime • Fantasy</p>
+
+                    <button
+                        class="watch-btn"
+                        data-title="Dragon World"
+                    >
+                        ▶ View Details
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- TV SERIES -->
+    <section class="section" id="series">
+        <h2>📺 Popular <span>TV Series</span></h2>
+
+        <div class="movie-grid">
+
+            <article class="movie-card" data-category="series">
+                <div class="poster series">🕵️</div>
+
+                <div class="movie-info">
+                    <h3>Mystery World</h3>
+                    <p>TV Series • Mystery</p>
+
+                    <button
+                        class="watch-btn"
+                        data-title="Mystery World"
+                    >
+                        ▶ View Details
+                    </button>
+                </div>
+            </article>
+
+            <article class="movie-card" data-category="series">
+                <div class="poster series">🌌</div>
+
+                <div class="movie-info">
+                    <h3>Galaxy Stories</h3>
+                    <p>TV Series • Sci-Fi</p>
+
+                    <button
+                        class="watch-btn"
+                        data-title="Galaxy Stories"
+                    >
+                        ▶ View Details
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <p class="no-results" id="noResults">
+        😕 No results found. Try another search!
+    </p>
+
+    <!-- FOOTER -->
+    <footer>
+        <strong>🔥 BNN NETWORK</strong>
+
+        <p>
+            Your World of Movies, Anime & TV Series
+        </p>
+
+        <p>© <span id="year"></span> BNN Network</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const searchBtn =
+            document.getElementById("searchBtn");
+
+        const cards =
+            document.querySelectorAll(".movie-card");
+
+        const noResults =
+            document.getElementById("noResults");
+
+        function searchMovies() {
+            const query =
+                searchInput.value.trim().toLowerCase();
+
+            let visibleCount = 0;
+
+            cards.forEach(function(card) {
+                const text =
+                    card.innerText.toLowerCase();
+
+                const matches = text.includes(query);
+
+                card.style.display =
+                    matches ? "" : "none";
+
+                if (matches) {
+                    visibleCount++;
+                }
+            });
+
+            noResults.style.display =
+                visibleCount === 0 ? "block" : "none";
+        }
+
+        searchBtn.addEventListener(
+            "click", searchMovies
+        );
+
+        searchInput.addEventListener(
+            "input", searchMovies
+        );
+
+        document.querySelectorAll(".watch-btn")
+            .forEach(function(button) {
+                button.addEventListener("click", function() {
+                    const title =
+                        button.dataset.title;
+
+                    alert(
+                        title +
+                        "\n\nDetails page එකක් මෙතැනට සම්බන්ධ කරන්න!"
+                    );
+                });
+            });
+
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+</body>
+  </html>
